@@ -48,4 +48,17 @@ public class GitRepoTest {
     public void name_is_end_of_url_resource_name() throws Exception {
         assertThat(new GitRepo(folder.getRoot()).getName(), is("testrepo"));
     }
+
+    @Test
+    public void lists_branches() throws Exception {
+        // Given
+        git.commit().setMessage("Initial commit.").call();
+        git.branchCreate().setName("dev").call();
+
+        // Then
+        assertThat(new GitRepo(folder.getRoot()).getBranches(), is(ImmutableSet.of(
+                "master",
+                "dev"
+        )));
+    }
 }

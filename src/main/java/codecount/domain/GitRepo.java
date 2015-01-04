@@ -1,6 +1,9 @@
 package codecount.domain;
 
+import com.google.common.collect.ImmutableSet;
 import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.lib.Ref;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,11 +16,17 @@ public class GitRepo {
     private Collection<GitFile> files;
     private String url;
     private String name;
+    private Collection<String> branches;
 
-    public GitRepo(File root) throws IOException {
+    public GitRepo(File root) throws IOException, GitAPIException {
         files = listDeep(root).stream().map(GitFile::new).collect(Collectors.toSet());
-        url = Git.open(root).getRepository().getConfig().getString("remote", "origin", "url");
+        Git git = Git.open(root);
+        url = git.getRepository().getConfig().getString("remote", "origin", "url");
         name = url.substring(url.lastIndexOf("/") + 1, url.length() - 4);
+        branches = git.branchList().call().stream()
+                .map(Ref::getName)
+                .map(branch -> branch.replace("refs/heads/", ""))
+                .collect(Collectors.toSet());
     }
 
     private Collection<File> listDeep(File dir) {
@@ -38,5 +47,9 @@ public class GitRepo {
 
     public String getName() {
         return name;
+    }
+
+    public Collection<String> getBranches() {
+        return branches;
     }
 }
