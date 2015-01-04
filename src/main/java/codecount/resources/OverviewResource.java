@@ -3,6 +3,14 @@ package codecount.resources;
 import codecount.dtos.Overview;
 import codecount.sevices.OverviewService;
 
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.MediaType;
+
+@Path("overview")
+@Produces(MediaType.APPLICATION_JSON)
 public class OverviewResource {
     private final OverviewService service;
 
@@ -10,7 +18,9 @@ public class OverviewResource {
         this.service = service;
     }
 
-    public Overview getOverview(String remoteUrl) {
+    @GET
+    public Overview getOverview(
+            @QueryParam("repo") String remoteUrl) {
         return service.getOverview(remoteUrl);
     }
 }
