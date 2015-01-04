@@ -3,7 +3,7 @@ package codecount.resources;
 import codecount.domain.Language;
 import codecount.dtos.Overview;
 import codecount.repository.GitRepoRepository;
-import codecount.sevices.OverviewService;
+import codecount.services.OverviewService;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import org.junit.Rule;

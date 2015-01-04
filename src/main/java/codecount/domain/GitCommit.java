@@ -16,4 +16,8 @@ public class GitCommit {
     public String getHash() {
         return hash;
     }
+
+    public long getTimestamp() {
+        return 0;
+    }
 }

@@ -2,7 +2,7 @@ package codecount;
 
 import codecount.repository.GitRepoRepository;
 import codecount.resources.OverviewResource;
-import codecount.sevices.OverviewService;
+import codecount.services.OverviewService;
 import io.dropwizard.Application;
 import io.dropwizard.setup.Environment;
 

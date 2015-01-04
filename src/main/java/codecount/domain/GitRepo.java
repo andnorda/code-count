@@ -69,10 +69,14 @@ public class GitRepo {
         return branches;
     }
 
-    public Collection<GitCommit> getCommits() throws GitAPIException {
-        return StreamSupport.stream(git.log().call().spliterator(), false)
-                .map(GitCommit::new)
-                .collect(Collectors.toSet());
+    public Collection<GitCommit> getCommits() {
+        try {
+            return StreamSupport.stream(git.log().call().spliterator(), false)
+                    .map(GitCommit::new)
+                    .collect(Collectors.toSet());
+        } catch (GitAPIException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void checkout(String ref) throws GitAPIException {

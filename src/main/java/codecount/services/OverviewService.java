@@ -1,4 +1,4 @@
-package codecount.sevices;
+package codecount.services;
 
 import codecount.domain.GitFile;
 import codecount.domain.GitRepo;

@@ -1,7 +1,7 @@
 package codecount.resources;
 
 import codecount.dtos.Overview;
-import codecount.sevices.OverviewService;
+import codecount.services.OverviewService;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
