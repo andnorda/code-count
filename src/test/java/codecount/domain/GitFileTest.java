@@ -19,9 +19,22 @@ public class GitFileTest {
         File file = folder.newFile("README");
 
         // When
-        GitFile gitFile = new GitFile(file);
+        GitFile gitFile = new GitFile(folder.getRoot(), file);
 
         // Then
         assertThat(gitFile.getName(), is("README"));
+    }
+
+    @Test
+    public void returns_relative_file_path() throws Exception {
+        // Given
+        folder.newFolder("dir");
+        File file = folder.newFile("dir/README");
+
+        // When
+        GitFile gitFile = new GitFile(folder.getRoot(), file);
+
+        // Then
+        assertThat(gitFile.getPath(), is("dir/README"));
     }
 }

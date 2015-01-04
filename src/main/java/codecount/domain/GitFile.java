@@ -9,12 +9,18 @@ import java.io.File;
 @ToString
 public class GitFile {
     private String name;
+    private String path;
 
-    public GitFile(File file) {
+    public GitFile(File root, File file) {
         name = file.getName();
+        path = file.getPath().replace(root.getPath() + "/", "");
     }
 
     public String getName() {
         return name;
+    }
+
+    public String getPath() {
+        return path;
     }
 }

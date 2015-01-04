@@ -33,9 +33,9 @@ public class GitRepoTest {
     public void returns_files() throws Exception {
         // Given
         Collection<GitFile> expected = ImmutableSet.of(
-                new GitFile(folder.newFile("README")),
-                new GitFile(folder.newFolder("src")),
-                new GitFile(folder.newFile("src/index.js")));
+                new GitFile(folder.getRoot(), folder.newFile("README")),
+                new GitFile(folder.getRoot(), folder.newFolder("src")),
+                new GitFile(folder.getRoot(), folder.newFile("src/index.js")));
 
         // Then
         assertThat(new GitRepo(folder.getRoot()).getFiles(), is(expected));
