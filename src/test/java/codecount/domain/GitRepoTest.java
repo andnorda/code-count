@@ -77,7 +77,7 @@ public class GitRepoTest {
     }
 
     @Test
-    public void lists_commits_of_master() throws Exception {
+    public void lists_commits_of_master_branch() throws Exception {
         // Given
         git.checkout().setCreateBranch(true).setName("dev").call();
         git.commit().setMessage("Second commit.").call();
@@ -89,7 +89,7 @@ public class GitRepoTest {
     }
 
     @Test
-    public void lists_commits_of_dev() throws Exception {
+    public void lists_commits_of_dev_branch() throws Exception {
         // Given
         git.checkout().setCreateBranch(true).setName("dev").call();
         RevCommit secondCommit = git.commit().setMessage("Second commit.").call();
@@ -100,6 +100,34 @@ public class GitRepoTest {
         assertThat(gitRepo.getCommits(), is(ImmutableSet.of(
                 new GitCommit(initialCommit),
                 new GitCommit(secondCommit)
+        )));
+    }
+
+    @Test
+    public void lists_commits_of_1_0_tag() throws Exception {
+        // Given
+        git.tag().setName("1.0").call();
+        git.commit().setMessage("Second commit.").call();
+
+        // Then
+        GitRepo gitRepo = new GitRepo(folder.getRoot());
+        gitRepo.checkout("1.0");
+        assertThat(gitRepo.getCommits(), is(ImmutableSet.of(
+                new GitCommit(initialCommit)
+        )));
+    }
+
+    @Test
+    public void lists_tags() throws Exception {
+        // Given
+        git.tag().setName("1.0").call();
+        git.commit().setMessage("Second commit.").call();
+        git.tag().setName("1.1").call();
+
+        // Then
+        assertThat(new GitRepo(folder.getRoot()).getTags(), is(ImmutableSet.of(
+                "1.0",
+                "1.1"
         )));
     }
 }

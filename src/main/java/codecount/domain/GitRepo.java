@@ -1,5 +1,6 @@
 package codecount.domain;
 
+import com.google.common.collect.ImmutableSet;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.CheckoutConflictException;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -19,6 +20,7 @@ public class GitRepo {
     private String name;
     private Collection<String> branches;
     private final Git git;
+    private Collection<String> tags;
 
     public GitRepo(File root) throws IOException, GitAPIException {
         git = Git.open(root);
@@ -29,6 +31,10 @@ public class GitRepo {
         branches = git.branchList().call().stream()
                 .map(Ref::getName)
                 .map(branch -> branch.replace("refs/heads/", ""))
+                .collect(Collectors.toSet());
+        tags = git.tagList().call().stream()
+                .map(Ref::getName)
+                .map(branch -> branch.replace("refs/tags/", ""))
                 .collect(Collectors.toSet());
     }
 
@@ -62,7 +68,11 @@ public class GitRepo {
                 .collect(Collectors.toSet());
     }
 
-    public void checkout(String branch) throws GitAPIException {
-        git.checkout().setName(branch).call();
+    public void checkout(String ref) throws GitAPIException {
+        git.checkout().setName(ref).call();
+    }
+
+    public Collection<String> getTags() {
+        return tags;
     }
 }
