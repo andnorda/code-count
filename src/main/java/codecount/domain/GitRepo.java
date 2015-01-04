@@ -20,20 +20,25 @@ public class GitRepo {
     private final Git git;
     private Collection<String> tags;
 
-    public GitRepo(File root) throws IOException, GitAPIException {
-        git = Git.open(root);
-        git.checkout().setName("master").call();
-        files = listDeep(root).stream().map(file -> new GitFile(root, file)).collect(Collectors.toSet());
-        url = git.getRepository().getConfig().getString("remote", "origin", "url");
-        name = url.substring(url.lastIndexOf("/") + 1, url.length() - 4);
-        branches = git.branchList().call().stream()
-                .map(Ref::getName)
-                .map(branch -> branch.replace("refs/heads/", ""))
-                .collect(Collectors.toSet());
-        tags = git.tagList().call().stream()
-                .map(Ref::getName)
-                .map(branch -> branch.replace("refs/tags/", ""))
-                .collect(Collectors.toSet());
+    public GitRepo(File root) {
+        try {
+            git = Git.open(root);
+            git.checkout().setName("master").call();
+            files = listDeep(root).stream().map(file -> new GitFile(root, file)).collect(Collectors.toSet());
+            url = git.getRepository().getConfig().getString("remote", "origin", "url");
+            name = url.substring(url.lastIndexOf("/") + 1, url.length() - 4);
+            branches = git.branchList().call().stream()
+                    .map(Ref::getName)
+                    .map(branch -> branch.replace("refs/heads/", ""))
+                    .collect(Collectors.toSet());
+            tags = git.tagList().call().stream()
+                    .map(Ref::getName)
+                    .map(branch -> branch.replace("refs/tags/", ""))
+                    .collect(Collectors.toSet());
+
+        } catch (IOException | GitAPIException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private Collection<File> listDeep(File dir) {
