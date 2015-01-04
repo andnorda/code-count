@@ -47,7 +47,7 @@ public class GitRepoTest {
     }
 
     @Test
-    public void name_is_end_of_url_resource_name() throws Exception {
+    public void name_is_url_resource_name() throws Exception {
         assertThat(new GitRepo(folder.getRoot()).getName(), is("testrepo"));
     }
 

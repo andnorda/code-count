@@ -1,8 +1,6 @@
 package codecount.domain;
 
-import com.google.common.collect.ImmutableSet;
 import org.eclipse.jgit.api.Git;
-import org.eclipse.jgit.api.errors.CheckoutConflictException;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.Ref;
 

@@ -4,7 +4,6 @@ import com.google.common.base.Optional;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
-import javax.security.auth.callback.LanguageCallback;
 import java.io.*;
 
 @EqualsAndHashCode
