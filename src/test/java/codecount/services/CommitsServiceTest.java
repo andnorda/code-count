@@ -34,7 +34,7 @@ public class CommitsServiceTest {
         GitRepo gitRepo = mock(GitRepo.class);
         GitCommit commit = mock(GitCommit.class);
         when(commit.getHash()).thenReturn("hash");
-        when(commit.getTimestamp()).thenReturn(1l);
+        when(commit.getTimestamp()).thenReturn(1);
         when(gitRepo.getCommits()).thenReturn(ImmutableSet.of(
                 commit
         ));
@@ -43,7 +43,7 @@ public class CommitsServiceTest {
         Collection<Commit> expected = ImmutableSet.of(
                 Commit.builder()
                         .hash("hash")
-                        .timestamp(1l)
+                        .timestamp(1)
                         .build()
         );
 

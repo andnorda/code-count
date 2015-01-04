@@ -8,16 +8,18 @@ import org.eclipse.jgit.revwalk.RevCommit;
 @ToString
 public class GitCommit {
     private String hash;
+    private int timestamp;
 
     public GitCommit(RevCommit revCommit) {
         hash = revCommit.getName();
+        timestamp = revCommit.getCommitTime();
     }
 
     public String getHash() {
         return hash;
     }
 
-    public long getTimestamp() {
-        return 0;
+    public int getTimestamp() {
+        return timestamp;
     }
 }

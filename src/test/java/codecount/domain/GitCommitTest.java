@@ -26,4 +26,11 @@ public class GitCommitTest {
 
         assertThat(new GitCommit(commit).getHash(), is(commit.getName()));
     }
+
+    @Test
+    public void returns_timestamp() throws Exception {
+        RevCommit commit = git.commit().setMessage("Initial commit.").call();
+
+        assertThat(new GitCommit(commit).getTimestamp(), is(commit.getCommitTime()));
+    }
 }

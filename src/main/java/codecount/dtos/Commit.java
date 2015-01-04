@@ -12,5 +12,5 @@ import lombok.NonNull;
 @ToString
 public class Commit {
     @NonNull private final String hash;
-    @NonNull private final Long timestamp;
+    @NonNull private final Integer timestamp;
 }
