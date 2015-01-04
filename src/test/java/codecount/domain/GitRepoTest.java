@@ -1,11 +1,15 @@
 package codecount.domain;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.lib.StoredConfig;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
+
+import java.util.Collection;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -26,10 +30,13 @@ public class GitRepoTest {
     @Test
     public void returns_files() throws Exception {
         // Given
-        folder.newFile("README");
+        Collection<GitFile> expected = ImmutableSet.of(
+                new GitFile(folder.newFile("README")),
+                new GitFile(folder.newFolder("src")),
+                new GitFile(folder.newFile("src/index.js")));
 
         // Then
-        assertThat(new GitRepo(folder.getRoot()).getFiles().size(), is(1));
+        assertThat(new GitRepo(folder.getRoot()).getFiles(), is(expected));
     }
 
     @Test
