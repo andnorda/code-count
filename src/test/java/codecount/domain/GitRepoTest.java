@@ -1,9 +1,9 @@
 package codecount.domain;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.lib.StoredConfig;
+import org.eclipse.jgit.revwalk.RevCommit;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -18,6 +18,7 @@ public class GitRepoTest {
     @Rule
     public TemporaryFolder folder = new TemporaryFolder();
     private Git git;
+    private RevCommit initialCommit;
 
     @Before
     public void setUp() throws Exception {
@@ -25,6 +26,7 @@ public class GitRepoTest {
         StoredConfig config = git.getRepository().getConfig();
         config.setString("remote", "origin", "url", "http://github.com/github/testrepo.git");
         config.save();
+        initialCommit = git.commit().setMessage("Initial commit.").call();
     }
 
     @Test
@@ -60,5 +62,18 @@ public class GitRepoTest {
                 "master",
                 "dev"
         )));
+    }
+
+    @Test
+    public void lists_commits() throws Exception {
+        // Given
+        RevCommit secondCommit = git.commit().setMessage("Second commit.").call();
+
+        // Then
+        assertThat(new GitRepo(folder.getRoot()).getCommits(), is(ImmutableSet.of(
+                new GitCommit(initialCommit),
+                new GitCommit(secondCommit)
+        )));
+
     }
 }

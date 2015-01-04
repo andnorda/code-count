@@ -11,12 +11,14 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 public class GitRepo {
     private Collection<GitFile> files;
     private String url;
     private String name;
     private Collection<String> branches;
+    private Collection<GitCommit> commits;
 
     public GitRepo(File root) throws IOException, GitAPIException {
         files = listDeep(root).stream().map(GitFile::new).collect(Collectors.toSet());
@@ -26,6 +28,9 @@ public class GitRepo {
         branches = git.branchList().call().stream()
                 .map(Ref::getName)
                 .map(branch -> branch.replace("refs/heads/", ""))
+                .collect(Collectors.toSet());
+        commits = StreamSupport.stream(git.log().all().call().spliterator(), false)
+                .map(GitCommit::new)
                 .collect(Collectors.toSet());
     }
 
@@ -51,5 +56,9 @@ public class GitRepo {
 
     public Collection<String> getBranches() {
         return branches;
+    }
+
+    public Collection<GitCommit> getCommits() {
+        return commits;
     }
 }
