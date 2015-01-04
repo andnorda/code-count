@@ -7,6 +7,7 @@ import lombok.ToString;
 
 import java.io.*;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.stream.Collectors;
 
 @EqualsAndHashCode
@@ -29,6 +30,8 @@ public class GitFile {
         language = Language.valueOf(file);
         if (language.isPresent()) {
             interdependencies = getInterdependencies(language.get(), file);
+        } else {
+            interdependencies = new HashSet<>();
         }
     }
 

@@ -1,5 +1,6 @@
 package codecount.resources;
 
+import codecount.dtos.FileInterdependencies;
 import codecount.dtos.FileLineCount;
 import codecount.services.FilesService;
 
@@ -24,5 +25,12 @@ public class FilesResource {
     public Collection<FileLineCount> getFileLineCounts(
             @QueryParam("repo") String remoteUrl) {
         return service.getFileLineCounts(remoteUrl);
+    }
+
+    @GET
+    @Path("/interdependencies")
+    public Collection<FileInterdependencies> getFileInterdependencies(
+            @QueryParam("repo") String remoteUrl) {
+        return service.getFileInterdependencies(remoteUrl);
     }
 }
