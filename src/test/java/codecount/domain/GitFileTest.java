@@ -5,6 +5,8 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
 import java.io.File;
+import java.io.FileWriter;
+import java.nio.file.Files;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -36,5 +38,24 @@ public class GitFileTest {
 
         // Then
         assertThat(gitFile.getPath(), is("dir/README"));
+    }
+
+    @Test
+    public void counts_number_of_lines() throws Exception {
+        // Given
+        File file = folder.newFile("README");
+        Files.write(file.toPath(), "line1\nline2".getBytes());
+
+        // Then
+        assertThat(new GitFile(folder.getRoot(), file).getLineCount(), is(1));
+    }
+
+    @Test
+    public void returns_line_count_of_0_for_dir() throws Exception {
+        // Given
+        File file = folder.newFolder();
+
+        // Then
+        assertThat(new GitFile(folder.getRoot(), file).getLineCount(), is(0));
     }
 }
