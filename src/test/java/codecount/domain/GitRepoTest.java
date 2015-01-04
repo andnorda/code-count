@@ -18,6 +18,9 @@ public class GitRepoTest {
     @Before
     public void setUp() throws Exception {
         git = Git.init().setDirectory(folder.getRoot()).call();
+        StoredConfig config = git.getRepository().getConfig();
+        config.setString("remote", "origin", "url", "http://github.com/github/testrepo.git");
+        config.save();
     }
 
     @Test
@@ -25,24 +28,17 @@ public class GitRepoTest {
         // Given
         folder.newFile("README");
 
-        // When
-        GitRepo gitRepo = new GitRepo(folder.getRoot());
-
         // Then
-        assertThat(gitRepo.getFiles().size(), is(1));
+        assertThat(new GitRepo(folder.getRoot()).getFiles().size(), is(1));
     }
 
     @Test
     public void url_is_origin_url() throws Exception {
-        // Given
-        StoredConfig config = git.getRepository().getConfig();
-        config.setString("remote", "origin", "url", "http://github.com/github/testrepo.git");
-        config.save();
+        assertThat(new GitRepo(folder.getRoot()).getUrl(), is("http://github.com/github/testrepo.git"));
+    }
 
-        // When
-        GitRepo gitRepo = new GitRepo(folder.getRoot());
-
-        // Then
-        assertThat(gitRepo.getUrl(), is("http://github.com/github/testrepo.git"));
+    @Test
+    public void name_is_end_of_url_resource_name() throws Exception {
+        assertThat(new GitRepo(folder.getRoot()).getName(), is("testrepo"));
     }
 }
