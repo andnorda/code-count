@@ -1,6 +1,8 @@
 package codecount.domain;
 
 import com.google.common.base.Optional;
+import com.google.common.collect.ImmutableSet;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -75,5 +77,19 @@ public class GitFileTest {
 
         // Then
         assertThat(new GitFile(folder.getRoot(), file).getLanguage(), is(Optional.of(Language.JAVA_SCRIPT)));
+    }
+
+    @Test
+    public void returns_interdependencies() throws Exception {
+        ClassLoader classLoader = getClass().getClassLoader();
+        File root = new File(classLoader.getResource("assets").getFile());
+        File file = new File(classLoader.getResource("assets/main.less").getFile());
+        assertThat(new GitFile(root, file).getInterdependencies(), is(ImmutableSet.of(
+                "mixins.less",
+                "typography.less",
+                "variables.less",
+                "normalize.css",
+                "vendor/grid.less"
+        )));
     }
 }

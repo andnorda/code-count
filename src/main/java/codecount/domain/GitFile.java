@@ -1,10 +1,13 @@
 package codecount.domain;
 
 import com.google.common.base.Optional;
+import com.google.common.collect.ImmutableSet;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 import java.io.*;
+import java.util.Collection;
+import java.util.stream.Collectors;
 
 @EqualsAndHashCode
 @ToString
@@ -13,6 +16,7 @@ public class GitFile {
     private String path;
     private int lineCount;
     private Optional<Language> language;
+    private Collection<String> interdependencies;
 
     public GitFile(File root, File file) {
         name = file.getName();
@@ -23,6 +27,9 @@ public class GitFile {
             lineCount = countLines(file);
         }
         language = Language.valueOf(file);
+        if (language.isPresent()) {
+            interdependencies = getInterdependencies(language.get(), file);
+        }
     }
 
     private int countLines(File file) {
@@ -59,5 +66,27 @@ public class GitFile {
 
     public Optional<Language> getLanguage() {
         return language;
+    }
+
+    public Collection<String> getInterdependencies() {
+        return interdependencies;
+    }
+
+    private Collection<String> getInterdependencies(Language language, File file) {
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader(file));
+            return reader.lines()
+                    .filter(line -> line.startsWith("@import"))
+                    .map(line -> line.replace("@import ", "").replace("\"", "").replace("'", "").replace(";", ""))
+                    .map(line -> {
+                        if (!line.endsWith(".css") && !line.endsWith(".less")) {
+                            return line + ".less";
+                        }
+                        return line;
+                    })
+                    .collect(Collectors.toSet());
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
