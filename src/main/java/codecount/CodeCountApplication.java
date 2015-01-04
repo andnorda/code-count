@@ -2,8 +2,10 @@ package codecount;
 
 import codecount.repository.GitRepoRepository;
 import codecount.resources.CommitsResource;
+import codecount.resources.FilesResource;
 import codecount.resources.OverviewResource;
 import codecount.services.CommitsService;
+import codecount.services.FilesService;
 import codecount.services.OverviewService;
 import io.dropwizard.Application;
 import io.dropwizard.setup.Environment;
@@ -24,5 +26,6 @@ public class CodeCountApplication extends Application<CodeCountConfiguration> {
         GitRepoRepository repo = new GitRepoRepository(root);
         environment.jersey().register(new OverviewResource(new OverviewService(repo)));
         environment.jersey().register(new CommitsResource(new CommitsService(repo)));
+        environment.jersey().register(new FilesResource(new FilesService(repo)));
     }
 }
