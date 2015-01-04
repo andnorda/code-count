@@ -1,8 +1,10 @@
 package codecount.domain;
 
+import com.google.common.base.Optional;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
+import javax.security.auth.callback.LanguageCallback;
 import java.io.*;
 
 @EqualsAndHashCode
@@ -11,6 +13,7 @@ public class GitFile {
     private String name;
     private String path;
     private int lineCount;
+    private Optional<Language> language;
 
     public GitFile(File root, File file) {
         name = file.getName();
@@ -20,6 +23,7 @@ public class GitFile {
         } else {
             lineCount = countLines(file);
         }
+        language = Language.valueOf(file);
     }
 
     private int countLines(File file) {
@@ -52,5 +56,9 @@ public class GitFile {
 
     public int getLineCount() {
         return lineCount;
+    }
+
+    public Optional<Language> getLanguage() {
+        return language;
     }
 }

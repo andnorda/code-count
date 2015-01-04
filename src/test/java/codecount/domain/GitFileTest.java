@@ -1,5 +1,6 @@
 package codecount.domain;
 
+import com.google.common.base.Optional;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -57,5 +58,23 @@ public class GitFileTest {
 
         // Then
         assertThat(new GitFile(folder.getRoot(), file).getLineCount(), is(0));
+    }
+
+    @Test
+    public void returns_absent_language() throws Exception {
+        // Given
+        File file = folder.newFile("README");
+
+        // Then
+        assertThat(new GitFile(folder.getRoot(), file).getLanguage(), is(Optional.absent()));
+    }
+
+    @Test
+    public void returns_language() throws Exception {
+        // Given
+        File file = folder.newFile("index.js");
+
+        // Then
+        assertThat(new GitFile(folder.getRoot(), file).getLanguage(), is(Optional.of(Language.JAVA_SCRIPT)));
     }
 }
