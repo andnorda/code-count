@@ -1,6 +1,7 @@
 package codecount.domain;
 
 import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.ListBranchCommand;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.Ref;
 
@@ -11,6 +12,8 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
+
+import static org.eclipse.jgit.api.ListBranchCommand.ListMode.ALL;
 
 public class GitRepo {
     private Collection<GitFile> files;
@@ -27,9 +30,10 @@ public class GitRepo {
             files = listDeep(root).stream().map(file -> new GitFile(root, file)).collect(Collectors.toSet());
             url = git.getRepository().getConfig().getString("remote", "origin", "url");
             name = url.substring(url.lastIndexOf("/") + 1, url.length() - 4);
-            branches = git.branchList().call().stream()
+            branches = git.branchList().setListMode(ALL).call().stream()
                     .map(Ref::getName)
                     .map(branch -> branch.replace("refs/heads/", ""))
+                    .map(branch -> branch.replace("refs/remotes/origin/", ""))
                     .collect(Collectors.toSet());
             tags = git.tagList().call().stream()
                     .map(Ref::getName)
