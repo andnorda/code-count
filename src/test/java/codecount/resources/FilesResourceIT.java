@@ -6,11 +6,10 @@ import codecount.repository.GitRepoRepository;
 import codecount.services.FilesService;
 import com.google.common.collect.ImmutableSet;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
-
-import java.util.Collection;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -42,11 +41,10 @@ public class FilesResourceIT {
 
     @Test
     public void returns_interdependencies() throws Exception {
-        assertThat(resource.getFileInterdependencies("https://github.com/andnorda/less-testrepo.git"), is(ImmutableSet.of(
+        assertThat(resource.getFileInterdependencies("https://github.com/andnorda/less-testrepo.git", "LESS"), is(ImmutableSet.of(
                 FileInterdependencies.builder().path("mixins.less").interdependencies(ImmutableSet.of("mixins/buttons.less")).build(),
                 FileInterdependencies.builder().path("main.less").interdependencies(ImmutableSet.of("mixins.less")).build(),
-                FileInterdependencies.builder().path("mixins/buttons.less").interdependencies(ImmutableSet.of()).build(),
-                FileInterdependencies.builder().path("mixins").interdependencies(ImmutableSet.of()).build()
+                FileInterdependencies.builder().path("mixins/buttons.less").interdependencies(ImmutableSet.of()).build()
         )));
     }
 }

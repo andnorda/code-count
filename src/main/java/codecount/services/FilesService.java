@@ -1,5 +1,7 @@
 package codecount.services;
 
+import codecount.domain.GitFile;
+import codecount.domain.Language;
 import codecount.dtos.FileInterdependencies;
 import codecount.dtos.FileLineCount;
 import codecount.repository.GitRepoRepository;
@@ -23,8 +25,9 @@ public class FilesService {
                 .collect(Collectors.toSet());
     }
 
-    public Collection<FileInterdependencies> getFileInterdependencies(String remoteUrl) {
+    public Collection<FileInterdependencies> getFileInterdependencies(String remoteUrl, Language language) {
         return repo.get(remoteUrl).getFiles().stream()
+                .filter(file -> file.getLanguage().isPresent() && file.getLanguage().get().equals(language))
                 .map(file -> FileInterdependencies.builder()
                         .path(file.getPath())
                         .interdependencies(file.getInterdependencies())

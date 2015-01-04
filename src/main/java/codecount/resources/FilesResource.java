@@ -1,13 +1,11 @@
 package codecount.resources;
 
+import codecount.domain.Language;
 import codecount.dtos.FileInterdependencies;
 import codecount.dtos.FileLineCount;
 import codecount.services.FilesService;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.Collection;
 
@@ -28,9 +26,10 @@ public class FilesResource {
     }
 
     @GET
-    @Path("/interdependencies")
+    @Path("/interdependencies/{language}")
     public Collection<FileInterdependencies> getFileInterdependencies(
-            @QueryParam("repo") String remoteUrl) {
-        return service.getFileInterdependencies(remoteUrl);
+            @QueryParam("repo") String remoteUrl,
+            @PathParam("language") String language) {
+        return service.getFileInterdependencies(remoteUrl, Language.valueOf(language));
     }
 }

@@ -2,6 +2,7 @@ package codecount.services;
 
 import codecount.domain.GitFile;
 import codecount.domain.GitRepo;
+import codecount.domain.Language;
 import codecount.dtos.FileInterdependencies;
 import codecount.dtos.FileLineCount;
 import codecount.repository.GitRepoRepository;
@@ -10,6 +11,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+
+import java.io.File;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -40,10 +43,12 @@ public class FilesServiceTest {
                 "mixins/color.less"
         ));
         GitFile file3 = mockGitFile("mixins/color.less", 3, ImmutableSet.of());
+        GitFile file4 = mockGitFile("mixins", 0, ImmutableSet.of());
         when(gitRepo.getFiles()).thenReturn(ImmutableSet.of(
                 file1,
                 file2,
-                file3
+                file3,
+                file4
         ));
         return gitRepo;
     }
@@ -53,12 +58,13 @@ public class FilesServiceTest {
         when(file1.getPath()).thenReturn(path);
         when(file1.getLineCount()).thenReturn(lineCount);
         when(file1.getInterdependencies()).thenReturn(interdependencies);
+        when(file1.getLanguage()).thenReturn(Language.valueOf(new File(path)));
         return file1;
     }
 
     @Test
     public void returns_file_interdependencies_collection() throws Exception {
-        assertThat(service.getFileInterdependencies("https://github.com/github/testrepo.git"), is(ImmutableSet.of(
+        assertThat(service.getFileInterdependencies("https://github.com/github/testrepo.git", Language.LESS), is(ImmutableSet.of(
                 FileInterdependencies.builder().path("main.less").interdependencies(ImmutableSet.of("mixins.less")).build(),
                 FileInterdependencies.builder().path("mixins.less").interdependencies(ImmutableSet.of("mixins/color.less")).build(),
                 FileInterdependencies.builder().path("mixins/color.less").interdependencies(ImmutableSet.of()).build()
@@ -70,7 +76,8 @@ public class FilesServiceTest {
         assertThat(service.getFileLineCounts("https://github.com/github/testrepo.git"), is(ImmutableSet.of(
                 FileLineCount.builder().path("main.less").lineCount(10).build(),
                 FileLineCount.builder().path("mixins.less").lineCount(1).build(),
-                FileLineCount.builder().path("mixins/color.less").lineCount(3).build()
+                FileLineCount.builder().path("mixins/color.less").lineCount(3).build(),
+                FileLineCount.builder().path("mixins").lineCount(0).build()
         )));
     }
 }
