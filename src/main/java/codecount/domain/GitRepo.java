@@ -1,7 +1,7 @@
 package codecount.domain;
 
-import com.google.common.collect.ImmutableSet;
 import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.errors.CheckoutConflictException;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.Ref;
 
@@ -18,19 +18,17 @@ public class GitRepo {
     private String url;
     private String name;
     private Collection<String> branches;
-    private Collection<GitCommit> commits;
+    private final Git git;
 
     public GitRepo(File root) throws IOException, GitAPIException {
+        git = Git.open(root);
+        git.checkout().setName("master").call();
         files = listDeep(root).stream().map(GitFile::new).collect(Collectors.toSet());
-        Git git = Git.open(root);
         url = git.getRepository().getConfig().getString("remote", "origin", "url");
         name = url.substring(url.lastIndexOf("/") + 1, url.length() - 4);
         branches = git.branchList().call().stream()
                 .map(Ref::getName)
                 .map(branch -> branch.replace("refs/heads/", ""))
-                .collect(Collectors.toSet());
-        commits = StreamSupport.stream(git.log().all().call().spliterator(), false)
-                .map(GitCommit::new)
                 .collect(Collectors.toSet());
     }
 
@@ -58,7 +56,13 @@ public class GitRepo {
         return branches;
     }
 
-    public Collection<GitCommit> getCommits() {
-        return commits;
+    public Collection<GitCommit> getCommits() throws GitAPIException {
+        return StreamSupport.stream(git.log().call().spliterator(), false)
+                .map(GitCommit::new)
+                .collect(Collectors.toSet());
+    }
+
+    public void checkout(String branch) throws GitAPIException {
+        git.checkout().setName(branch).call();
     }
 }

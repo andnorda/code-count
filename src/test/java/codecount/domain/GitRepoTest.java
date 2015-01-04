@@ -74,6 +74,32 @@ public class GitRepoTest {
                 new GitCommit(initialCommit),
                 new GitCommit(secondCommit)
         )));
+    }
 
+    @Test
+    public void lists_commits_of_master() throws Exception {
+        // Given
+        git.checkout().setCreateBranch(true).setName("dev").call();
+        git.commit().setMessage("Second commit.").call();
+
+        // Then
+        assertThat(new GitRepo(folder.getRoot()).getCommits(), is(ImmutableSet.of(
+                new GitCommit(initialCommit)
+        )));
+    }
+
+    @Test
+    public void lists_commits_of_dev() throws Exception {
+        // Given
+        git.checkout().setCreateBranch(true).setName("dev").call();
+        RevCommit secondCommit = git.commit().setMessage("Second commit.").call();
+
+        // Then
+        GitRepo gitRepo = new GitRepo(folder.getRoot());
+        gitRepo.checkout("dev");
+        assertThat(gitRepo.getCommits(), is(ImmutableSet.of(
+                new GitCommit(initialCommit),
+                new GitCommit(secondCommit)
+        )));
     }
 }
