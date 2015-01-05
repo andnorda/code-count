@@ -35,16 +35,16 @@ public class ContributorsServiceTest {
 
         //Then
         assertThat(service.getContributors("http://github.com/github/testrepo.git"), is(ImmutableSet.of(
-                Contributor.builder().name("Ola Nordmann").email("ola@nordmann.no").build(),
-                Contributor.builder().name("Kari Nordmann").email("kari@nordmann.no").build()
+                Contributor.builder().name("Ola Nordmann").commitCount(2).build(),
+                Contributor.builder().name("Kari Nordmann").commitCount(3).build()
         )));
     }
 
     private GitRepo mockGitRepo() {
         GitRepo gitRepo = mock(GitRepo.class);
-        GitContributor contributor1 = mockGitContributor("Ola Nordmann", "ola@nordmann.no");
+        GitContributor contributor1 = mockGitContributor("Ola Nordmann", 2);
         GitCommit commit1 = mockGitCommit(contributor1);
-        GitContributor contributor2 = mockGitContributor("Kari Nordmann", "kari@nordmann.no");
+        GitContributor contributor2 = mockGitContributor("Kari Nordmann", 3);
         GitCommit commit2 = mockGitCommit(contributor2);
         when(gitRepo.getCommits()).thenReturn(ImmutableSet.of(
                 commit1,
@@ -59,10 +59,10 @@ public class ContributorsServiceTest {
         return commit1;
     }
 
-    private GitContributor mockGitContributor(String name, String email) {
-        GitContributor contributor1 = mock(GitContributor.class);
-        when(contributor1.getName()).thenReturn(name);
-        when(contributor1.getEmail()).thenReturn(email);
-        return contributor1;
+    private GitContributor mockGitContributor(String name, int commitCount) {
+        GitContributor contributor = mock(GitContributor.class);
+        when(contributor.getName()).thenReturn(name);
+        when(contributor.getCommitCount()).thenReturn(commitCount);
+        return contributor;
     }
 }

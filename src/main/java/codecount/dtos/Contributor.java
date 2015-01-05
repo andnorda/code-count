@@ -12,5 +12,5 @@ import lombok.experimental.Builder;
 @ToString
 public class Contributor {
     @NonNull private final String name;
-    @NonNull private final String email;
+    @NonNull private final Integer commitCount;
 }

@@ -25,24 +25,22 @@ public class GitContributorTest {
 
     @Test
     public void is_equal_based_on_name_and_email() throws Exception {
-        assertThat(new GitContributor(folder.newFile(), "Ola Nordmann", "ola@nordmann.no"),
-                is(new GitContributor(folder.newFile(), "Ola Nordmann", "ola@nordmann.no")));
+        assertThat(new GitContributor(folder.newFile(), "Ola Nordmann"),
+                is(new GitContributor(folder.newFile(), "Ola Nordmann")));
     }
 
     @Test
     public void returns_email_and_name() throws Exception {
-        GitContributor contributor = new GitContributor(folder.newFile(), "Ola Nordmann", "ola@nordmann.no");
+        GitContributor contributor = new GitContributor(folder.newFile(), "Ola Nordmann");
         assertThat(contributor.getName(), is("Ola Nordmann"));
-        assertThat(contributor.getEmail(), is("ola@nordmann.no"));
     }
 
     @Test
     public void returns_number_of_commits() throws Exception {
-        PersonIdent ola = new PersonIdent("Ola Nordmann", "ola@nordmann.no");
-        git.commit().setMessage("Initial commit.").setAuthor(ola).call();
-        git.commit().setMessage("Second commit.").setAuthor(ola).call();
+        git.commit().setMessage("Initial commit.").setAuthor("Ola Nordmann", "ola@nordmann.no").call();
+        git.commit().setMessage("Second commit.").setAuthor("Ola Nordmann", "sauron14@hotmail.com").call();
         git.commit().setMessage("Third commit.").setAuthor("Kari Nordmann", "kari@nordmann.no").call();
 
-        assertThat(new GitContributor(folder.getRoot(), "Ola Nordmann", "ola@nordmann.no").getCommitCount(), is(2));
+        assertThat(new GitContributor(folder.getRoot(), "Ola Nordmann").getCommitCount(), is(2));
     }
 }

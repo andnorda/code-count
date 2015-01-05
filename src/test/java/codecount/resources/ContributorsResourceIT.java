@@ -25,7 +25,7 @@ public class ContributorsResourceIT {
     @Test
     public void returns_contributors() throws Exception {
         assertThat(resource.getContributors("https://github.com/github/testrepo.git"), is(ImmutableSet.of(
-                Contributor.builder().name("Scott Chacon").email("schacon@gmail.com").build()
+                Contributor.builder().name("Scott Chacon").commitCount(6).build()
         )));
     }
 }

@@ -21,7 +21,7 @@ public class GitCommit {
         PersonIdent author = revCommit.getAuthorIdent();
         String email = author.getEmailAddress();
         String name = author.getName();
-        this.author = new GitContributor(root, name, email);
+        this.author = new GitContributor(root, name);
     }
 
     public String getHash() {

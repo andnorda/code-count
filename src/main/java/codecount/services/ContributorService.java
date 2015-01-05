@@ -20,7 +20,7 @@ public class ContributorService {
                 .distinct()
                 .map(author -> Contributor.builder()
                         .name(author.getName())
-                        .email(author.getEmail())
+                        .commitCount(author.getCommitCount())
                         .build())
                 .collect(Collectors.toSet());
     }
