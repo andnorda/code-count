@@ -5,11 +5,14 @@ import org.eclipse.jgit.api.errors.GitAPIException;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Collection;
+import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 public class GitContributor {
     private final File root;
     private final String name;
+    private Collection<GitCommit> commits;
 
     public GitContributor(File root, String name) {
         this.root = root;
@@ -20,14 +23,26 @@ public class GitContributor {
         return name;
     }
 
-    public int getCommitCount() {
+    public Collection<GitCommit> getCommits() {
+        if (commits == null) {
+            commits = countCommits();
+        }
+        return commits;
+    }
+
+    private Collection<GitCommit> countCommits() {
         try {
-            return (int) StreamSupport.stream(Git.open(root).log().call().spliterator(), false)
+            return StreamSupport.stream(Git.open(root).log().call().spliterator(), false)
                     .filter(commit -> commit.getAuthorIdent().getName().equals(name))
-                    .count();
+                    .map(commit -> new GitCommit(root, commit))
+                    .collect(Collectors.toSet());
         } catch (IOException | GitAPIException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public int getCommitCount() {
+        return getCommits().size();
     }
 
     @Override

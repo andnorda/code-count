@@ -1,13 +1,11 @@
 package codecount.domain;
 
-import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.eclipse.jgit.lib.PersonIdent;
 import org.eclipse.jgit.revwalk.RevCommit;
 
 import java.io.File;
 
-@EqualsAndHashCode
 @ToString
 public class GitCommit {
     private String hash;
@@ -19,7 +17,6 @@ public class GitCommit {
         timestamp = revCommit.getCommitTime();
 
         PersonIdent author = revCommit.getAuthorIdent();
-        String email = author.getEmailAddress();
         String name = author.getName();
         this.author = new GitContributor(root, name);
     }
@@ -34,5 +31,22 @@ public class GitCommit {
 
     public GitContributor getAuthor() {
         return author;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        GitCommit commit = (GitCommit) o;
+
+        if (hash != null ? !hash.equals(commit.hash) : commit.hash != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return hash != null ? hash.hashCode() : 0;
     }
 }
