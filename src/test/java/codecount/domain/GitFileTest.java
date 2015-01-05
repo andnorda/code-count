@@ -2,7 +2,6 @@ package codecount.domain;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableSet;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;

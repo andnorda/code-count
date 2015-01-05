@@ -1,6 +1,5 @@
 package codecount.services;
 
-import codecount.domain.GitFile;
 import codecount.domain.Language;
 import codecount.dtos.FileInterdependencies;
 import codecount.dtos.FileLineCount;

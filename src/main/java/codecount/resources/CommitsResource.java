@@ -1,7 +1,6 @@
 package codecount.resources;
 
 import codecount.dtos.Commit;
-import codecount.dtos.Contributor;
 import codecount.services.CommitsService;
 
 import javax.ws.rs.GET;
@@ -24,12 +23,5 @@ public class CommitsResource {
     public Collection<Commit> getCommits(
             @QueryParam("repo") String remoteUrl) {
         return service.getCommits(remoteUrl);
-    }
-
-    @GET
-    @Path("/contributors")
-    public Collection<Contributor> getContributors(
-            @QueryParam("repo")String remoteUrl) {
-        return service.getContributors(remoteUrl);
     }
 }

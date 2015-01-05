@@ -1,7 +1,6 @@
 package codecount.domain;
 
 import com.google.common.base.Optional;
-import com.google.common.collect.ImmutableSet;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 

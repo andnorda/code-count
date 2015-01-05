@@ -6,7 +6,6 @@ import codecount.repository.GitRepoRepository;
 import codecount.services.FilesService;
 import com.google.common.collect.ImmutableSet;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;

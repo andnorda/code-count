@@ -2,9 +2,9 @@ package codecount.dtos;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.ToString;
 import lombok.experimental.Builder;
-import lombok.NonNull;
 
 @Getter
 @Builder
