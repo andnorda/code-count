@@ -11,6 +11,7 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
 import java.io.File;
+import java.nio.file.Files;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -55,5 +56,15 @@ public class GitContributorTest {
                 new GitCommit(folder.getRoot(), initialCommit),
                 new GitCommit(folder.getRoot(), secondCommit)
         )));
+    }
+
+    @Test
+    public void counts_line_additions() throws Exception {
+        git.commit().setMessage("Initial commit.").setAuthor("Ola Nordmann", "ola@nordmann.no").call();
+        Files.write(folder.newFile().toPath(), "line1\nline2".getBytes());
+        git.add().addFilepattern(".").call();
+        git.commit().setMessage("Second commit.").setAuthor("Ola Nordmann", "ola@nordmann.no").call();
+
+        assertThat(new GitContributor(folder.getRoot(), "Ola Nordmann").getAdditionsCount(), is(2));
     }
 }
