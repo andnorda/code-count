@@ -15,6 +15,7 @@ import java.util.stream.StreamSupport;
 import static org.eclipse.jgit.api.ListBranchCommand.ListMode.ALL;
 
 public class GitRepo {
+    private final File root;
     private Collection<GitFile> files;
     private String url;
     private String name;
@@ -23,6 +24,7 @@ public class GitRepo {
     private Collection<String> tags;
 
     public GitRepo(File root) {
+        this.root = root;
         try {
             git = Git.open(root);
             git.checkout().setName("master").call();
@@ -71,7 +73,7 @@ public class GitRepo {
     public Collection<GitCommit> getCommits() {
         try {
             return StreamSupport.stream(git.log().call().spliterator(), false)
-                    .map(GitCommit::new)
+                    .map(commit -> new GitCommit(root, commit))
                     .collect(Collectors.toSet());
         } catch (GitAPIException e) {
             throw new RuntimeException(e);

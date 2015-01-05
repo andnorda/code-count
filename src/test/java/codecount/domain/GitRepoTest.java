@@ -71,8 +71,8 @@ public class GitRepoTest {
 
         // Then
         assertThat(new GitRepo(folder.getRoot()).getCommits(), is(ImmutableSet.of(
-                new GitCommit(initialCommit),
-                new GitCommit(secondCommit)
+                new GitCommit(folder.getRoot(), initialCommit),
+                new GitCommit(folder.getRoot(), secondCommit)
         )));
     }
 
@@ -84,7 +84,7 @@ public class GitRepoTest {
 
         // Then
         assertThat(new GitRepo(folder.getRoot()).getCommits(), is(ImmutableSet.of(
-                new GitCommit(initialCommit)
+                new GitCommit(folder.getRoot(), initialCommit)
         )));
     }
 
@@ -98,8 +98,8 @@ public class GitRepoTest {
         GitRepo gitRepo = new GitRepo(folder.getRoot());
         gitRepo.checkout("dev");
         assertThat(gitRepo.getCommits(), is(ImmutableSet.of(
-                new GitCommit(initialCommit),
-                new GitCommit(secondCommit)
+                new GitCommit(folder.getRoot(), initialCommit),
+                new GitCommit(folder.getRoot(), secondCommit)
         )));
     }
 
@@ -113,7 +113,7 @@ public class GitRepoTest {
         GitRepo gitRepo = new GitRepo(folder.getRoot());
         gitRepo.checkout("1.0");
         assertThat(gitRepo.getCommits(), is(ImmutableSet.of(
-                new GitCommit(initialCommit)
+                new GitCommit(folder.getRoot(), initialCommit)
         )));
     }
 

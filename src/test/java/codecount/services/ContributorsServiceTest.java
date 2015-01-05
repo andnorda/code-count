@@ -30,21 +30,7 @@ public class ContributorsServiceTest {
     @Test
     public void builds_contributors() throws Exception {
         // Given
-        GitRepo gitRepo = mock(GitRepo.class);
-        GitCommit commit1 = mock(GitCommit.class);
-        when(commit1.getAuthor()).thenReturn(GitContributor.builder()
-                .name("Ola Nordmann")
-                .email("ola@nordmann.no")
-                .build());
-        GitCommit commit2 = mock(GitCommit.class);
-        when(commit2.getAuthor()).thenReturn(GitContributor.builder()
-                .name("Kari Nordmann")
-                .email("kari@nordmann.no")
-                .build());
-        when(gitRepo.getCommits()).thenReturn(ImmutableSet.of(
-                commit1,
-                commit2
-        ));
+        GitRepo gitRepo = mockGitRepo();
         when(repo.get("http://github.com/github/testrepo.git")).thenReturn(gitRepo);
 
         //Then
@@ -52,5 +38,31 @@ public class ContributorsServiceTest {
                 Contributor.builder().name("Ola Nordmann").email("ola@nordmann.no").build(),
                 Contributor.builder().name("Kari Nordmann").email("kari@nordmann.no").build()
         )));
+    }
+
+    private GitRepo mockGitRepo() {
+        GitRepo gitRepo = mock(GitRepo.class);
+        GitContributor contributor1 = mockGitContributor("Ola Nordmann", "ola@nordmann.no");
+        GitCommit commit1 = mockGitCommit(contributor1);
+        GitContributor contributor2 = mockGitContributor("Kari Nordmann", "kari@nordmann.no");
+        GitCommit commit2 = mockGitCommit(contributor2);
+        when(gitRepo.getCommits()).thenReturn(ImmutableSet.of(
+                commit1,
+                commit2
+        ));
+        return gitRepo;
+    }
+
+    private GitCommit mockGitCommit(GitContributor contributor1) {
+        GitCommit commit1 = mock(GitCommit.class);
+        when(commit1.getAuthor()).thenReturn(contributor1);
+        return commit1;
+    }
+
+    private GitContributor mockGitContributor(String name, String email) {
+        GitContributor contributor1 = mock(GitContributor.class);
+        when(contributor1.getName()).thenReturn(name);
+        when(contributor1.getEmail()).thenReturn(email);
+        return contributor1;
     }
 }
