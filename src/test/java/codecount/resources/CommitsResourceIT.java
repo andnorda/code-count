@@ -1,6 +1,7 @@
 package codecount.resources;
 
 import codecount.dtos.Commit;
+import codecount.dtos.Contributor;
 import codecount.repository.GitRepoRepository;
 import codecount.services.CommitsService;
 import com.google.common.collect.ImmutableSet;
@@ -8,6 +9,8 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
+
+import java.util.Collection;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -31,6 +34,13 @@ public class CommitsResourceIT {
                 Commit.builder().hash("444b3c366018526033e849443b252c6f73076cd6").timestamp(1290044076).build(),
                 Commit.builder().hash("040b4674e7f9480f61f33441964b66c044dbc47f").timestamp(1290046238).build(),
                 Commit.builder().hash("f829883bcbc383e26b3428b268c981b9116370c0").timestamp(1290044297).build()
+        )));
+    }
+
+    @Test
+    public void returns_contributors() throws Exception {
+        assertThat(resource.getContributors("https://github.com/github/testrepo.git"), is(ImmutableSet.of(
+                Contributor.builder().name("Scott Chacon").email("schacon@gmail.com").build()
         )));
     }
 }

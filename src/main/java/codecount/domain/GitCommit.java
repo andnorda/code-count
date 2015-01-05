@@ -9,10 +9,15 @@ import org.eclipse.jgit.revwalk.RevCommit;
 public class GitCommit {
     private String hash;
     private int timestamp;
+    private GitContributor author;
 
     public GitCommit(RevCommit revCommit) {
         hash = revCommit.getName();
         timestamp = revCommit.getCommitTime();
+        author = GitContributor.builder()
+                .name(revCommit.getAuthorIdent().getName())
+                .email(revCommit.getAuthorIdent().getEmailAddress())
+                .build();
     }
 
     public String getHash() {
@@ -21,5 +26,9 @@ public class GitCommit {
 
     public int getTimestamp() {
         return timestamp;
+    }
+
+    public GitContributor getAuthor() {
+        return author;
     }
 }

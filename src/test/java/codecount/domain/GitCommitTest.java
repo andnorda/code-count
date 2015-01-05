@@ -33,4 +33,14 @@ public class GitCommitTest {
 
         assertThat(new GitCommit(commit).getTimestamp(), is(commit.getCommitTime()));
     }
+
+    @Test
+    public void returns_author() throws Exception {
+        RevCommit commit = git.commit().setMessage("Initial commit.").setAuthor("Ola Nordmann", "ola@nordmann.no").call();
+
+        assertThat(new GitCommit(commit).getAuthor(), is(GitContributor.builder()
+                .name("Ola Nordmann")
+                .email("ola@nordmann.no")
+                .build()));
+    }
 }
