@@ -9,10 +9,13 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
+import java.io.IOError;
+import java.io.IOException;
 import java.util.Collection;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.fail;
 
 public class GitRepoTest {
     @Rule
@@ -129,5 +132,21 @@ public class GitRepoTest {
                 "1.0",
                 "1.1"
         )));
+    }
+
+    @Test
+    public void returns_commit_by_hash() throws Exception {
+        // Given
+        git.tag().setName("1.0").call();
+        RevCommit commit = git.commit().setMessage("Second commit.").call();
+        git.tag().setName("1.1").call();
+
+        // Then
+        assertThat(new GitRepo(folder.getRoot()).getCommit(commit.name()), is(new GitCommit(folder.getRoot(), commit)));
+        try {
+            assertThat(new GitRepo(folder.getRoot()).getCommit("A55"), is(new GitCommit(folder.getRoot(), commit)));
+            fail();
+        } catch (RuntimeException e) {
+        }
     }
 }

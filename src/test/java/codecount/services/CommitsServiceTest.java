@@ -1,11 +1,14 @@
 package codecount.services;
 
 import codecount.domain.GitCommit;
+import codecount.domain.GitContributor;
 import codecount.domain.GitRepo;
 import codecount.dtos.Commit;
+import codecount.dtos.CommitDetails;
 import codecount.repository.GitRepoRepository;
 import com.google.common.collect.ImmutableSet;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -29,7 +32,7 @@ public class CommitsServiceTest {
     }
 
     @Test
-    public void builds_overview() throws Exception {
+    public void builds_commit_list() throws Exception {
         // Given
         GitRepo gitRepo = mock(GitRepo.class);
         GitCommit commit = mock(GitCommit.class);
@@ -40,14 +43,37 @@ public class CommitsServiceTest {
         ));
         when(repo.get("http://github.com/github/testrepo.git")).thenReturn(gitRepo);
 
-        Collection<Commit> expected = ImmutableSet.of(
+        // Then
+        assertThat(service.getCommits("http://github.com/github/testrepo.git"), is(ImmutableSet.of(
                 Commit.builder()
                         .hash("hash")
                         .timestamp(1)
                         .build()
-        );
+        )));
+    }
+
+    @Test
+    public void builds_commit_details() throws Exception {
+        // Given
+        String hash = "10e9ac58c77bc229d8c59a5b4eb7422916453148";
+        GitRepo gitRepo = mock(GitRepo.class);
+        GitCommit commit = mock(GitCommit.class);
+        when(commit.getHash()).thenReturn(hash);
+        GitContributor gitContributor = mock(GitContributor.class);
+        when(gitContributor.getName()).thenReturn("Ola Nordmann");
+        when(commit.getAuthor()).thenReturn(gitContributor);
+        when(commit.getDeletionsCount()).thenReturn(100);
+        when(commit.getInsertionsCount()).thenReturn(30);
+        when(commit.getTimestamp()).thenReturn(1);
+        when(gitRepo.getCommit(hash)).thenReturn(commit);
+        when(repo.get("http://github.com/github/testrepo.git")).thenReturn(gitRepo);
 
         // Then
-        assertThat(service.getCommits("http://github.com/github/testrepo.git"), is(expected));
+        assertThat(service.getCommitDetails("http://github.com/github/testrepo.git", hash), is(CommitDetails.builder()
+                .committer("Ola Nordmann")
+                .insertions(30)
+                .deletions(100)
+                .timestamp(1)
+                .build()));
     }
 }

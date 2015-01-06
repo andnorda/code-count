@@ -2,7 +2,10 @@ package codecount.domain;
 
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Ref;
+import org.eclipse.jgit.revwalk.RevCommit;
+import org.eclipse.jgit.revwalk.RevWalk;
 
 import java.io.File;
 import java.io.IOException;
@@ -76,6 +79,15 @@ public class GitRepo {
                     .map(commit -> new GitCommit(root, commit))
                     .collect(Collectors.toSet());
         } catch (GitAPIException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public GitCommit getCommit(String hash) {
+        try {
+            RevWalk walk = new RevWalk(git.getRepository());
+            return new GitCommit(root,walk.parseCommit(ObjectId.fromString(hash)));
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }

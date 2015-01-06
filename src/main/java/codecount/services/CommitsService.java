@@ -1,6 +1,8 @@
 package codecount.services;
 
+import codecount.domain.GitCommit;
 import codecount.dtos.Commit;
+import codecount.dtos.CommitDetails;
 import codecount.repository.GitRepoRepository;
 
 import java.util.Collection;
@@ -20,5 +22,15 @@ public class CommitsService {
                         .timestamp(commit.getTimestamp())
                         .build())
                 .collect(Collectors.toSet());
+    }
+
+    public CommitDetails getCommitDetails(String remoteUrl, String commitHash) {
+        GitCommit commit = repo.get(remoteUrl).getCommit(commitHash);
+        return CommitDetails.builder()
+                .committer(commit.getAuthor().getName())
+                .insertions(commit.getInsertionsCount())
+                .deletions(commit.getDeletionsCount())
+                .timestamp(commit.getTimestamp())
+                .build();
     }
 }
