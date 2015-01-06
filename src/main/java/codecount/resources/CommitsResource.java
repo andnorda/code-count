@@ -1,12 +1,10 @@
 package codecount.resources;
 
 import codecount.dtos.Commit;
+import codecount.dtos.CommitDetails;
 import codecount.services.CommitsService;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.Collection;
 
@@ -23,5 +21,13 @@ public class CommitsResource {
     public Collection<Commit> getCommits(
             @QueryParam("repo") String remoteUrl) {
         return service.getCommits(remoteUrl);
+    }
+
+    @GET
+    @Path("/{hash}")
+    public CommitDetails getCommitDetails(
+            @QueryParam("repo") String remoteUrl,
+            @PathParam("hash") String hash) {
+        return service.getCommitDetails(remoteUrl, hash);
     }
 }

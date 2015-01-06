@@ -1,6 +1,7 @@
 package codecount.resources;
 
 import codecount.dtos.Commit;
+import codecount.dtos.CommitDetails;
 import codecount.dtos.Contributor;
 import codecount.repository.GitRepoRepository;
 import codecount.services.CommitsService;
@@ -33,5 +34,16 @@ public class CommitsResourceIT {
                 Commit.builder().hash("040b4674e7f9480f61f33441964b66c044dbc47f").timestamp(1290046238).build(),
                 Commit.builder().hash("f829883bcbc383e26b3428b268c981b9116370c0").timestamp(1290044297).build()
         )));
+    }
+
+    @Test
+    public void returns_commit_details() throws Exception {
+        assertThat(resource.getCommitDetails("https://github.com/github/testrepo.git", "10e9ac58c77bc229d8c59a5b4eb7422916453148"),
+                is(CommitDetails.builder()
+                        .committer("Scott Chacon")
+                        .insertions(2)
+                        .deletions(0)
+                        .timestamp(1290047137)
+                        .build()));
     }
 }
