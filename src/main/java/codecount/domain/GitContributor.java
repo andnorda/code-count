@@ -1,12 +1,8 @@
 package codecount.domain;
 
-import org.apache.commons.exec.CommandLine;
-import org.apache.commons.exec.DefaultExecutor;
-import org.apache.commons.exec.PumpStreamHandler;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
@@ -49,8 +45,12 @@ public class GitContributor {
         return getCommits().size();
     }
 
-    public int getAdditionsCount() {
-        return getCommits().stream().mapToInt(GitCommit::getAdditionsCount).sum();
+    public int getInsertionsCount() {
+        return getCommits().stream().mapToInt(GitCommit::getInsertionsCount).sum();
+    }
+
+    public int getDeletionsCount() {
+        return getCommits().stream().mapToInt(GitCommit::getDeletionsCount).sum();
     }
 
     @Override

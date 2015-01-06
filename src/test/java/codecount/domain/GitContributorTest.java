@@ -2,10 +2,8 @@ package codecount.domain;
 
 import com.google.common.collect.ImmutableSet;
 import org.eclipse.jgit.api.Git;
-import org.eclipse.jgit.lib.PersonIdent;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -59,12 +57,16 @@ public class GitContributorTest {
     }
 
     @Test
-    public void counts_line_additions() throws Exception {
+    public void counts_total_insertions_and_deletions() throws Exception {
         git.commit().setMessage("Initial commit.").setAuthor("Ola Nordmann", "ola@nordmann.no").call();
-        Files.write(folder.newFile().toPath(), "line1\nline2".getBytes());
+        File file = folder.newFile();
+        Files.write(file.toPath(), "line1\nline2".getBytes());
         git.add().addFilepattern(".").call();
         git.commit().setMessage("Second commit.").setAuthor("Ola Nordmann", "ola@nordmann.no").call();
+        Files.write(file.toPath(), "line3\nline4".getBytes());
+        git.commit().setAll(true).setMessage("Third commit.").setAuthor("Ola Nordmann", "ola@nordmann.no").call();
 
-        assertThat(new GitContributor(folder.getRoot(), "Ola Nordmann").getAdditionsCount(), is(2));
+        assertThat(new GitContributor(folder.getRoot(), "Ola Nordmann").getInsertionsCount(), is(4));
+        assertThat(new GitContributor(folder.getRoot(), "Ola Nordmann").getDeletionsCount(), is(2));
     }
 }
